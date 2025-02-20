@@ -1,9 +1,10 @@
-package main.java.bookstore.service;
+package bookstore.service;
 
-import java.awt.*;
-import java.awt.print.Book;
+import bookstore.entity.Book;
+import java.util.List;
 
 public interface BookService {
     Book save(Book book);
+
     List<Book> findAll();
 }

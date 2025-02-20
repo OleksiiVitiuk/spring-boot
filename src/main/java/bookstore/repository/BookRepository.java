@@ -1,11 +1,12 @@
-package main.java.bookstore.repository;
+package bookstore.repository;
 
-
-import org.springframework.data.jpa.repository.JpaRepository;
+import bookstore.entity.Book;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Book;
-
 @Repository
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository {
+    Book save(Book book);
+
+    List<Book> findAll();
 }
