@@ -31,4 +31,6 @@ public class Book {
 
     @Column(nullable = false)
     private BigDecimal price;
+    private String description;
+    private String coverImage;
 }

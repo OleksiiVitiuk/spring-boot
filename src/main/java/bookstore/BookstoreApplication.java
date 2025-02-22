@@ -30,6 +30,8 @@ public class BookstoreApplication {
             book.setTitle("First book");
             book.setIsbn("ISBN");
             book.setPrice(BigDecimal.valueOf(100));
+            book.setDescription("Interesting book");
+            book.setCoverImage("https://edit.org/images/cat/book-covers-big-2019101610.jpg");
             bookService.save(book);
             bookService.findAll().forEach(System.out::println);
         };
