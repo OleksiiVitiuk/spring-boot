@@ -37,6 +37,7 @@
         <lombok-binding.version>0.2.0</lombok-binding.version>
         <maven-checkstyle.version>3.3.0</maven-checkstyle.version>
         <mysql-connector.version>9.2.0</mysql-connector.version>
+        <spring-boot-starter.version>3.4.2</spring-boot-starter.version>
     </properties>
     <dependencies>
         <dependency>
@@ -75,6 +76,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${spring-boot-starter.version}</version>
         </dependency>
 
         <dependency>
