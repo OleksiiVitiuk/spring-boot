@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-insert-users
+      author: oleksii
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: email
+                  value: "noilleixahobrei-9443@yopmail.com"
+              - column:
+                  name: password
+                  value: "z3e2a$Yu&Y*H[$$*sO{y"
+              - column:
+                  name: first_name
+                  value: "Admin"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: shipping_address
+                  value: "10 Joshua Parkway South Carolinemouth S66 8JW"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: email
+                  value: "grepugoixeutre-8349@yopmail.com"
+              - column:
+                  name: password
+                  value: "&K^eL@v?g6$VrtUJes:^"
+              - column:
+                  name: first_name
+                  value: "Regular"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: shipping_address
+                  value: "Flat 89 Alex Parkways Evafort SG18 0HL"
