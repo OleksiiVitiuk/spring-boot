@@ -1,4 +1,4 @@
-package bookstore.role;
+package bookstore.repository;
 
 import bookstore.entity.Role;
 import java.util.Optional;

@@ -16,14 +16,15 @@ public class FieldMatchesValidator implements ConstraintValidator<FieldMatches, 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context) {
         try {
-            for (int i = 1; i < fieldNames.length; i++) {
-                Field firstField = obj.getClass().getDeclaredField(fieldNames[0]);
-                Field currentField = obj.getClass().getDeclaredField(fieldNames[i]);
+            Field firstField = obj.getClass().getDeclaredField(fieldNames[0]);
+            firstField.setAccessible(true);
+            Object firstValue = firstField.get(obj);
 
-                firstField.setAccessible(true);
+            for (int i = 1; i < fieldNames.length; i++) {
+                Field currentField = obj.getClass().getDeclaredField(fieldNames[i]);
                 currentField.setAccessible(true);
 
-                if (!Objects.equals(firstField.get(obj), currentField.get(obj))) {
+                if (!Objects.equals(firstValue, currentField.get(obj))) {
                     return false;
                 }
             }
