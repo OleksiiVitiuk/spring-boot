@@ -37,7 +37,7 @@ public class BookController {
     }
 
     @Operation(summary = "Get book by ID", description = "Returns detailed information about a book by its ID")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
@@ -67,7 +67,7 @@ public class BookController {
 
     @Operation(summary = "Search for books", description = "Returns a list of books that match the search criteria")
     @GetMapping("/search")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Page<BookDto> searchBooks(BookSearchParametersDto searchParameters,
                                      Pageable pageable) {
         return bookService.search(searchParameters, pageable);
