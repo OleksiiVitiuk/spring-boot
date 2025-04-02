@@ -7,7 +7,7 @@ import bookstore.entity.Book;
 import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.BookMapper;
 import bookstore.repository.BookRepository;
-import bookstore.repository.book.BookSpecificationBuilder;
+import bookstore.repository.BookSpecificationBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-    private final BookRepository bookRepository;
-    private final BookMapper bookMapper;
-    private final BookSpecificationBuilder bookSpecificationBuilder;
+    private BookRepository bookRepository;
+    private BookMapper bookMapper;
+    private BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto createBookRequestDto) {

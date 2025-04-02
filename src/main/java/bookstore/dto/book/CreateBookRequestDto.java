@@ -1,12 +1,15 @@
 package bookstore.dto.book;
 
 import bookstore.validation.Path;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
 import lombok.Data;
 import org.hibernate.validator.constraints.ISBN;
+
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Data
 public class CreateBookRequestDto {
@@ -25,4 +28,6 @@ public class CreateBookRequestDto {
     private String description;
     @Path
     private String coverImage;
+    @NotEmpty
+    private Set<Long> categoryIds;
 }
