@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/categories")
 @Tag(name = "Categories", description = "Endpoints for CRUD categories and get books by category")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Operation(summary = "Get all categories",
             description = "Returns a paginated list of categories")
@@ -37,6 +37,7 @@ public class CategoryController {
         return categoryService.findAll(pageable);
     }
 
+    @Operation(summary = "Create a new category", description = "Creates and returns a new category")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
@@ -44,6 +45,8 @@ public class CategoryController {
         return categoryService.saveCategory(categoryCreateDto);
     }
 
+    @Operation(summary = "Update an existing category",
+            description = "Updates a category by its ID and returns the updated category")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryDto updateCategory(@PathVariable Long id,
@@ -51,12 +54,15 @@ public class CategoryController {
         return categoryService.update(id, categoryCreateDto);
     }
 
+    @Operation(summary = "Get a category by ID",
+            description = "Retrieves a category by its ID")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public CategoryDto getById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
+    @Operation(summary = "Delete a category", description = "Deletes a category by its ID")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
@@ -64,8 +70,10 @@ public class CategoryController {
         categoryService.deleteCategory(id);
     }
 
+    @Operation(summary = "Get books by category",
+            description = "Returns a paginated list of books belonging to the specified category")
     @GetMapping("/{id}/books")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<BookDtoWithoutCategoryIds> getBooksByCategory(Pageable pageable,
                                                               @PathVariable Long id) {
         return categoryService.findBooksByCategory(pageable, id);

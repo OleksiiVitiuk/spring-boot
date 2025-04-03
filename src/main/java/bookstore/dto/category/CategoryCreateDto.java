@@ -9,6 +9,5 @@ public class CategoryCreateDto {
     @NotBlank
     @Size(max = 25)
     private String name;
-    @NotBlank
     private String description;
 }

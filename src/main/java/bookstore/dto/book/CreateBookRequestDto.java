@@ -1,6 +1,7 @@
 package bookstore.dto.book;
 
 import bookstore.validation.Path;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,21 +14,27 @@ import java.util.Set;
 
 @Data
 public class CreateBookRequestDto {
-    @NotNull
+    @NotBlank
     @Size(max = 25, message = "Title must be up to 25 characters")
     private String title;
-    @NotNull
+
+    @NotBlank
     @Size(max = 25, message = "Author name must be up to 25 characters")
     private String author;
-    @NotNull
+
+    @NotBlank
     @ISBN
     private String isbn;
+
     @NotNull
     @Positive
     private BigDecimal price;
+
     private String description;
+
     @Path
     private String coverImage;
+
     @NotEmpty
     private Set<Long> categoryIds;
 }
