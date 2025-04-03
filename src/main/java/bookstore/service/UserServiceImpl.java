@@ -7,13 +7,14 @@ import bookstore.entity.User;
 import bookstore.exception.EntityNotFoundException;
 import bookstore.exception.RegistrationException;
 import bookstore.mapper.UserMapper;
+import bookstore.repository.CartRepository;
 import bookstore.repository.RoleRepository;
 import bookstore.repository.UserRepository;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final CartRepository cartRepository;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto) {

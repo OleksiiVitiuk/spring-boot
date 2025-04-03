@@ -5,15 +5,26 @@ import bookstore.dto.book.BookDto;
 import bookstore.dto.book.BookDtoWithoutCategoryIds;
 import bookstore.dto.book.CreateBookRequestDto;
 import bookstore.entity.Book;
+import bookstore.entity.Category;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import java.util.stream.Collectors;
 
 @Mapper(config = MapperConfig.class, uses = CategoryMapper.class)
 public interface BookMapper {
 
     @Mapping(target = "categoryIds", ignore = true)
     BookDto toDto(Book book);
+
+    @AfterMapping
+    default void setCategoryIds(Book book, @MappingTarget BookDto bookDto) {
+        bookDto.setCategoryIds(book.getCategories()
+                .stream().map(Category::getId)
+                .collect(Collectors.toSet())
+        );
+    }
 
     BookDtoWithoutCategoryIds toDtoWithoutCategoryIds(Book book);
 
