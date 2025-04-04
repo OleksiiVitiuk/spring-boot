@@ -2,6 +2,7 @@ package bookstore.service;
 
 import bookstore.dto.user.UserRegistrationRequestDto;
 import bookstore.dto.user.UserResponseDto;
+import bookstore.entity.Cart;
 import bookstore.entity.Role;
 import bookstore.entity.User;
 import bookstore.exception.EntityNotFoundException;
@@ -41,6 +42,10 @@ public class UserServiceImpl implements UserService {
                         "Role is not found: " + Role.RoleName.ROLE_USER)
                 );
         user.setRoles(Set.of(role));
+        user = userRepository.save(user);
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
         return userMapper.toDto(userRepository.save(user));
     }
 }

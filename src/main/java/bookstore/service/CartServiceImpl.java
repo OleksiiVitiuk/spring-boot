@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class CartServiceImpl implements CartService {
     private EntityManager entityManager;
 
     @Override
-    public CartDto getCarts(Authentication authentication) {
+    public CartDto getCart(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return cartMapper.toDto(
                 cartRepository.findByUserId(user.getId())
@@ -59,20 +58,18 @@ public class CartServiceImpl implements CartService {
                         "Book not found with id: " + createItemRequestDto.getBookId())
                 );
 
-        Optional<CartItem> existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getBook().getId().equals(book.getId()))
-                .findFirst();
+        CartItem cartItem = cartItemRepository.findByCartIdAndBookId(cart.getId(), book.getId())
+                .orElseGet(() -> {
+                    CartItem newCartItem = new CartItem();
+                    newCartItem.setBook(book);
+                    newCartItem.setQuantity(0);
+                    newCartItem.setCart(cart);
+                    return newCartItem;
+                });
 
-        if (existingItem.isPresent()) {
-            existingItem.get().setQuantity(
-                    existingItem.get().getQuantity() + createItemRequestDto.getQuantity());
-        } else {
-            CartItem newCartItem = new CartItem();
-            newCartItem.setBook(book);
-            newCartItem.setQuantity(createItemRequestDto.getQuantity());
-            newCartItem.setCart(cart);
-            cart.getCartItems().add(newCartItem);
-        }
+        cartItem.setQuantity(cartItem.getQuantity() + createItemRequestDto.getQuantity());
+        cart.getCartItems().add(cartItem);
+        cartItemRepository.save(cartItem);
 
         return cartMapper.toDto(cartRepository.save(cart));
     }

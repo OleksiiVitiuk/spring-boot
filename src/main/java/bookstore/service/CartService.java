@@ -5,7 +5,7 @@ import bookstore.dto.cart.CartItemCreateRequestDto;
 import org.springframework.security.core.Authentication;
 
 public interface CartService {
-    CartDto getCarts(Authentication authentication);
+    CartDto getCart(Authentication authentication);
 
     CartDto addCartItem(Authentication authentication,
                         CartItemCreateRequestDto createItemRequestDto);

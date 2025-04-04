@@ -20,8 +20,6 @@ public interface CartItemsMapper {
     CartItemDto toDto(CartItem cartItem);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "book", ignore = true)
-    @Mapping(target = "cart", ignore = true)
     CartItem toModel(CartItemCreateRequestDto createItemRequestDto);
 
     @AfterMapping

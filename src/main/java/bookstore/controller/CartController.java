@@ -32,18 +32,24 @@ public class CartController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public CartDto getCarts(Authentication authentication) {
-        return cartService.getCarts(authentication);
+        return cartService.getCart(authentication);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public CartDto createCart(Authentication authentication,
-                              @RequestBody @Valid CartItemCreateRequestDto createItemRequestDto) {
+    @Operation(summary = "Add item to cart",
+            description = "Adds a new item to the cart of the authenticated user."
+    )
+    public CartDto addCartItem(Authentication authentication,
+                               @RequestBody @Valid CartItemCreateRequestDto createItemRequestDto) {
         return cartService.addCartItem(authentication, createItemRequestDto);
     }
 
     @PutMapping("/item/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Update cart item",
+            description = "Updates the quantity or details of an existing cart item."
+    )
     public CartDto updateCartItem(
             Authentication authentication,
             @PathVariable Long cartItemId,
@@ -55,6 +61,9 @@ public class CartController {
     @DeleteMapping("/item/{cartItemId}")
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete cart item",
+            description = "Removes an item from the cart by its ID."
+    )
     public void deleteCartItem(@PathVariable Long cartItemId) {
         cartService.deleteCart(cartItemId);
     }
