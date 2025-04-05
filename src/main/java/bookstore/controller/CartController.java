@@ -2,6 +2,7 @@ package bookstore.controller;
 
 import bookstore.dto.cart.CartDto;
 import bookstore.dto.cart.CartItemCreateRequestDto;
+import bookstore.entity.User;
 import bookstore.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,8 @@ public class CartController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     public CartDto getCarts(Authentication authentication) {
-        return cartService.getCart(authentication);
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return cartService.getCart(userId, authentication);
     }
 
     @PostMapping
@@ -42,7 +44,8 @@ public class CartController {
     )
     public CartDto addCartItem(Authentication authentication,
                                @RequestBody @Valid CartItemCreateRequestDto createItemRequestDto) {
-        return cartService.addCartItem(authentication, createItemRequestDto);
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return cartService.addCartItem(userId, authentication, createItemRequestDto);
     }
 
     @PutMapping("/item/{cartItemId}")
@@ -55,7 +58,8 @@ public class CartController {
             @PathVariable Long cartItemId,
             @RequestBody @Valid CartItemCreateRequestDto createItemRequestDto
     ) {
-        return cartService.updateCartItem(authentication, cartItemId, createItemRequestDto);
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        return cartService.updateCartItem(userId, authentication, cartItemId, createItemRequestDto);
     }
 
     @DeleteMapping("/item/{cartItemId}")
@@ -64,7 +68,8 @@ public class CartController {
     @Operation(summary = "Delete cart item",
             description = "Removes an item from the cart by its ID."
     )
-    public void deleteCartItem(@PathVariable Long cartItemId) {
-        cartService.deleteCart(cartItemId);
+    public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
+        Long userId = ((User) authentication.getPrincipal()).getId();
+        cartService.deleteCart(userId, cartItemId);
     }
 }

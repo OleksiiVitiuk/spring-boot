@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
     private EntityManager entityManager;
 
     @Override
-    public CartDto getCart(Authentication authentication) {
+    public CartDto getCart(Long userId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return cartMapper.toDto(
                 cartRepository.findByUserId(user.getId())
@@ -42,16 +42,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto addCartItem(Authentication authentication,
+    public CartDto addCartItem(Long userId, Authentication authentication,
                                CartItemCreateRequestDto createItemRequestDto) {
         User user = (User) authentication.getPrincipal();
 
         Cart cart = cartRepository.findByUserId(user.getId())
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setUser(entityManager.merge(user));
-                    return cartRepository.save(newCart);
-                });
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No cart found for user with id: " + user.getId())
+                );
 
         Book book = bookRepository.findById(createItemRequestDto.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -62,7 +60,6 @@ public class CartServiceImpl implements CartService {
                 .orElseGet(() -> {
                     CartItem newCartItem = new CartItem();
                     newCartItem.setBook(book);
-                    newCartItem.setQuantity(0);
                     newCartItem.setCart(cart);
                     return newCartItem;
                 });
@@ -75,7 +72,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto updateCartItem(Authentication authentication, Long cartItemId,
+    public CartDto updateCartItem(Long userId, Authentication authentication, Long cartItemId,
                                   CartItemCreateRequestDto createItemRequestDto) {
         User user = (User) authentication.getPrincipal();
 
@@ -91,7 +88,14 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart(Long cartItemId) {
+    public void deleteCart(Long cartItemId, Long itemId) {
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    @Override
+    public Cart createCartForUser(User user) {
+        Cart cart = new Cart();
+        cart.setUser(user);
+        return cartRepository.save(cart);
     }
 }

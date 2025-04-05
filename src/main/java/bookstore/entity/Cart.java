@@ -16,7 +16,6 @@ import java.util.Set;
 @SQLRestriction("is_deleted = false")
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @MapsId

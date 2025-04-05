@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Set;
 
 @Service
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final CartRepository cartRepository;
+    private final CartService cartService;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto userRegistrationRequestDto) {
@@ -43,9 +45,7 @@ public class UserServiceImpl implements UserService {
                 );
         user.setRoles(Set.of(role));
         user = userRepository.save(user);
-        Cart cart = new Cart();
-        cart.setUser(user);
-        cartRepository.save(cart);
-        return userMapper.toDto(userRepository.save(user));
+        Cart cart = cartService.createCartForUser(user);
+        return userMapper.toDto(user);
     }
 }
