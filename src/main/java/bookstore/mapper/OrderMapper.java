@@ -22,5 +22,4 @@ public interface OrderMapper {
     @Mapping(target = "orderDate", ignore = true)
     @Mapping(target = "orderItems", ignore = true)
     Order toModelForCreating(OrderCreateRequestDto createRequestDto);
-
 }

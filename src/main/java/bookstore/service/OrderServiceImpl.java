@@ -9,21 +9,21 @@ import bookstore.entity.Order;
 import bookstore.entity.OrderItem;
 import bookstore.entity.User;
 import bookstore.exception.EntityNotFoundException;
+import bookstore.exception.OrderProcessingException;
 import bookstore.mapper.OrderItemMapper;
 import bookstore.mapper.OrderMapper;
 import bookstore.repository.CartItemRepository;
 import bookstore.repository.OrderItemRepository;
 import bookstore.repository.OrderRepository;
+import java.math.BigDecimal;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         Set<CartItem> cartItems = cartItemRepository.findByCartUserId(user.getId());
 
         if (cartItems.isEmpty()) {
-            throw new EntityNotFoundException("Cart is empty. Cannot create order.");
+            throw new OrderProcessingException("Cart is empty. Cannot create order.");
         }
 
         Order newOrder = orderMapper.toModelForCreating(requestDto);
@@ -69,26 +69,6 @@ public class OrderServiceImpl implements OrderService {
         newOrder.getOrderItems().addAll(orderItems);
 
         return orderMapper.toDto(orderRepository.saveAndFlush(newOrder));
-    }
-
-    private BigDecimal calculateTotal(Set<CartItem> cartItems) {
-        return cartItems.stream()
-                .map(cartItem -> cartItem.getBook().getPrice()
-                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private Set<OrderItem> createOrderItems(Set<CartItem> cartItems, Order order) {
-        return cartItems.stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setOrder(order);
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    return orderItem;
-                })
-                .collect(Collectors.toSet());
     }
 
     @Override
@@ -124,5 +104,25 @@ public class OrderServiceImpl implements OrderService {
                         "Order with id: " + orderId
                                 + " has no item with id: " + itemId));
         return orderItemMapper.toDto(orderItem);
+    }
+
+    private BigDecimal calculateTotal(Set<CartItem> cartItems) {
+        return cartItems.stream()
+                .map(cartItem -> cartItem.getBook().getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private Set<OrderItem> createOrderItems(Set<CartItem> cartItems, Order order) {
+        return cartItems.stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(order);
+                    orderItem.setBook(cartItem.getBook());
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getBook().getPrice());
+                    return orderItem;
+                })
+                .collect(Collectors.toSet());
     }
 }
