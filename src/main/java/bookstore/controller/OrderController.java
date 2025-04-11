@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/orders")
@@ -39,6 +39,11 @@ public class OrderController {
         return orderService.getOrders(authentication, pageable);
     }
 
+    @Operation(
+            summary = "Get all items from a specific order",
+            description = "Returns a paginated list of items from a specific "
+                    + "order belonging to the authenticated user."
+    )
     @GetMapping("{id}/items")
     @PreAuthorize("hasRole('USER')")
     public Page<OrderItemDto> getOrderItems(Authentication authentication,
@@ -48,8 +53,8 @@ public class OrderController {
     }
 
     @Operation(summary = "Get a specific item from an order",
-            description = "Returns details about a specific item (order item ID) within " +
-                    "a specific order (order ID) for the authenticated user.")
+            description = "Returns details about a specific item (order item ID) within "
+                    + "a specific order (order ID) for the authenticated user.")
     @GetMapping("{id}/items/{orderId}")
     @PreAuthorize("hasRole('USER')")
     public OrderItemDto getOrderItem(Authentication authentication,
@@ -59,7 +64,8 @@ public class OrderController {
     }
 
     @Operation(summary = "Create a new order",
-            description = "Creates a new order for the authenticated user using the items in their cart.")
+            description = "Creates a new order for the authenticated "
+                    + "user using the items in their cart.")
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     @ResponseStatus(HttpStatus.CREATED)

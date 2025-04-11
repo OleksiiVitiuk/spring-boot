@@ -62,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal total = calculateTotal(cartItems);
         newOrder.setTotal(total);
 
-        newOrder = orderRepository.saveAndFlush(newOrder);
+        newOrder = orderRepository.save(newOrder);
 
         Set<OrderItem> orderItems = createOrderItems(cartItems, newOrder);
 

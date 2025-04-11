@@ -1,11 +1,11 @@
 package bookstore.dto.order;
 
 import bookstore.entity.Order;
-import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Data;
 
 @Data
 public class OrderDto {
