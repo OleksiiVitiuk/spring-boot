@@ -37,7 +37,8 @@ public class CategoryController {
         return categoryService.findAll(pageable);
     }
 
-    @Operation(summary = "Create a new category", description = "Creates and returns a new category")
+    @Operation(summary = "Create a new category",
+            description = "Creates and returns a new category")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")

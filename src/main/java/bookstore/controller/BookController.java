@@ -36,7 +36,8 @@ public class BookController {
         return bookService.findAll(pageable);
     }
 
-    @Operation(summary = "Get book by ID", description = "Returns detailed information about a book by its ID")
+    @Operation(summary = "Get book by ID",
+            description = "Returns detailed information about a book by its ID")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
@@ -50,10 +51,12 @@ public class BookController {
         return bookService.save(bookDto);
     }
 
-    @Operation(summary = "Update the book", description = "Updates information about a book by its ID")
+    @Operation(summary = "Update the book",
+            description = "Updates information about a book by its ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody @Valid CreateBookRequestDto createBookRequestDto) {
+    public BookDto updateBook(@PathVariable Long id,
+                              @RequestBody @Valid CreateBookRequestDto createBookRequestDto) {
         return bookService.updateBook(id, createBookRequestDto);
     }
 
@@ -65,7 +68,8 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @Operation(summary = "Search for books", description = "Returns a list of books that match the search criteria")
+    @Operation(summary = "Search for books",
+            description = "Returns a list of books that match the search criteria")
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Page<BookDto> searchBooks(BookSearchParametersDto searchParameters,

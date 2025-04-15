@@ -4,12 +4,12 @@ import bookstore.config.MapperConfig;
 import bookstore.dto.category.CategoryCreateDto;
 import bookstore.dto.category.CategoryDto;
 import bookstore.entity.Category;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(config = MapperConfig.class)
 public interface CategoryMapper {
