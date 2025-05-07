@@ -56,7 +56,7 @@ class BookControllerTest {
         assertBook(actual,
                 1L,
                 "BookTitle", "BookAuthor",
-                "978-3-16-148410-0",
+                "123-456-789",
                 BigDecimal.valueOf(20.00),
                 "desc", "path");
     }
