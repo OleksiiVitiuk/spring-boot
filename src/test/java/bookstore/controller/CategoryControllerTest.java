@@ -56,9 +56,9 @@ public class CategoryControllerTest {
 
         assertNotNull(categories);
         assertEquals(categories.size(), 1);
-        assertEquals("Fantasy", categories.get(0).getName());
+        assertEquals("Science", categories.get(0).getName());
         assertEquals(
-                "Interesting fantastic stories",
+                "desc",
                 categories.get(0).getDescription());
 
     }
@@ -113,7 +113,7 @@ public class CategoryControllerTest {
         assertEquals(1L, book.getId());
         assertEquals("BookTitle", book.getTitle());
         assertEquals("BookAuthor", book.getAuthor());
-        assertEquals("123-456-789", book.getIsbn());
+        assertEquals("978-3-16-148410-0", book.getIsbn());
         assertEquals(BigDecimal.valueOf(20.00), book.getPrice());
         assertEquals("desc", book.getDescription());
         assertEquals("path", book.getCoverImage());

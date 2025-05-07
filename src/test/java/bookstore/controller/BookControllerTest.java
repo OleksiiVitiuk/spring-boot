@@ -56,7 +56,7 @@ class BookControllerTest {
         assertBook(actual,
                 1L,
                 "BookTitle", "BookAuthor",
-                "123-456-789",
+                "978-3-16-148410-0",
                 BigDecimal.valueOf(20.00),
                 "desc", "path");
     }
@@ -79,7 +79,7 @@ class BookControllerTest {
                 1L,
                 "Updated Title",
                 "Updated Author",
-                "123-4-56-789",
+                "978-3-16-148410-0",
                 BigDecimal.valueOf(9.99),
                 "Updated Description",
                 "https://prnt.sc/fuAknzzANREq");
@@ -103,7 +103,7 @@ class BookControllerTest {
         assertFalse(books.isEmpty());
         assertBook(books.get(0), 1L,
                 "BookTitle", "BookAuthor",
-                "123-456-789",
+                "978-3-16-148410-0",
                 BigDecimal.valueOf(9.99),
                 "desc", "path");
     }
@@ -112,7 +112,7 @@ class BookControllerTest {
     @DisplayName("Test invalid book ISBN")
     void validBookTest() throws Exception {
         CreateBookRequestDto invalidBook = TestUtil.getRequestToUpdateBook();
-        invalidBook.setIsbn("WrongIsbn");
+        invalidBook.setIsbn("9783161484101");
         String json = objectMapper.writeValueAsString(invalidBook);
 
         MvcResult result = mockMvc.perform(put("/books/1")
@@ -122,7 +122,7 @@ class BookControllerTest {
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
-        assertTrue(result.getResponse().getContentAsString().contains("invalid ISBN"));
+        assertTrue(result.getResponse().getContentAsString().contains("Invalid ISBN format"));
     }
 
     private void assertBook(BookDto actualBook,
