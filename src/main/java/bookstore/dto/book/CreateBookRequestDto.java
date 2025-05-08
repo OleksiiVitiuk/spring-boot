@@ -22,7 +22,7 @@ public class CreateBookRequestDto {
     private String author;
 
     @NotBlank
-    @Pattern(regexp = "^(978|979)[0-9]{10}$", message = "Invalid ISBN format")
+    @Pattern(regexp = "^\\d{3}-\\d{3}-\\d{3}$", message = "Invalid ISBN format")
     private String isbn;
 
     @NotNull

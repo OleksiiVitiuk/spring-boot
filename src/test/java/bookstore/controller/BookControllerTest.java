@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -79,7 +81,7 @@ class BookControllerTest {
                 1L,
                 "Updated Title",
                 "Updated Author",
-                "978-3-16-148410-0",
+                "123-456-789",
                 BigDecimal.valueOf(9.99),
                 "Updated Description",
                 "https://prnt.sc/fuAknzzANREq");
@@ -88,8 +90,13 @@ class BookControllerTest {
     @Test
     @DisplayName("Test search books")
     void searchBooks() throws Exception {
+        MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("title", "BookTitle");
+        requestParams.add("author", "BookAuthor");
+        requestParams.add("isbn", "123-456-789");
+
         MvcResult result = mockMvc.perform(get("/books/search")
-                        .param("title", "BookTitle")
+                        .params(requestParams)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -103,8 +110,8 @@ class BookControllerTest {
         assertFalse(books.isEmpty());
         assertBook(books.get(0), 1L,
                 "BookTitle", "BookAuthor",
-                "978-3-16-148410-0",
-                BigDecimal.valueOf(9.99),
+                "123-456-789",
+                BigDecimal.valueOf(20.00),
                 "desc", "path");
     }
 
@@ -112,7 +119,7 @@ class BookControllerTest {
     @DisplayName("Test invalid book ISBN")
     void validBookTest() throws Exception {
         CreateBookRequestDto invalidBook = TestUtil.getRequestToUpdateBook();
-        invalidBook.setIsbn("9783161484101");
+        invalidBook.setIsbn("12345");
         String json = objectMapper.writeValueAsString(invalidBook);
 
         MvcResult result = mockMvc.perform(put("/books/1")

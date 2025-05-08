@@ -24,7 +24,7 @@ public class TestUtil {
     public static CreateBookRequestDto getRequestToUpdateBook() {
         CREATE_BOOK_REQUEST_DTO.setTitle("Updated Title");
         CREATE_BOOK_REQUEST_DTO.setAuthor("Updated Author");
-        CREATE_BOOK_REQUEST_DTO.setIsbn("978-3-16-148410-0");
+        CREATE_BOOK_REQUEST_DTO.setIsbn("123-456-789");
         CREATE_BOOK_REQUEST_DTO.setPrice(BigDecimal.valueOf(9.99));
         CREATE_BOOK_REQUEST_DTO.setDescription("Updated Description");
         CREATE_BOOK_REQUEST_DTO.setCoverImage("https://prnt.sc/fuAknzzANREq");
