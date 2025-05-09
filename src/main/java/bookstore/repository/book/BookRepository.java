@@ -1,4 +1,4 @@
-package bookstore.repository;
+package bookstore.repository.book;
 
 import bookstore.entity.Book;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,9 @@
-package bookstore.repository;
+package bookstore.repository.book;
 
 import bookstore.dto.book.BookSearchParametersDto;
 import bookstore.entity.Book;
+import bookstore.repository.SpecificationBuilder;
+import bookstore.repository.SpecificationProviderManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -13,7 +15,7 @@ public class BookSpecificationBuilder implements SpecificationBuilder<Book> {
     private static final String ISBN_KEY = "isbn";
     private static final String TITLE_KEY = "title";
 
-    private SpecificationProviderManager<Book> specificationProviderManager;
+    private final SpecificationProviderManager<Book> specificationProviderManager;
 
     @Override
     public Specification<Book> build(BookSearchParametersDto searchParametersDto) {

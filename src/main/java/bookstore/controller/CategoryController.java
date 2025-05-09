@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/categories")
 @Tag(name = "Categories", description = "Endpoints for CRUD categories and get books by category")
 public class CategoryController {
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     @Operation(summary = "Get all categories",
             description = "Returns a paginated list of categories")
