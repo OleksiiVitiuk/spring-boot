@@ -22,6 +22,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -135,5 +136,23 @@ public class CategoryControllerTest {
 
         String actual = result.getResponse().getContentAsString();
         assertTrue(actual.contains("must not be blank"));
+    }
+
+    @Test
+    @DisplayName("Test delete category by id")
+    @Sql(scripts = "classpath:database/category/add-category-with-id-3.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void deleteCategory_ValidId_ReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/categories/3")
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Test delete non-existent category")
+    void deleteCategory_NonExistentId_ReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/categories/999")
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
     }
 }

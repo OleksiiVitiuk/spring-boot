@@ -71,7 +71,7 @@ public class BookRepositoryTest {
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getAuthor(), actual.getAuthor());
         assertEquals(expected.getIsbn(), actual.getIsbn());
-        assertEquals(0, expected.getPrice().compareTo(actual.getPrice())); // Для BigDecimal
+        assertEquals(0, expected.getPrice().compareTo(actual.getPrice()));
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getCoverImage(), actual.getCoverImage());
         assertEquals(expected.getCategories().iterator().next().getId(),

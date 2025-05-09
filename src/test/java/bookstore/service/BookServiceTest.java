@@ -11,6 +11,7 @@ import bookstore.repository.book.BookSpecificationBuilder;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,5 +106,52 @@ class BookServiceTest {
         verify(bookSpecificationBuilder).build(any(BookSearchParametersDto.class));
         verify(bookRepository).findAll(spec, Pageable.unpaged());
         verify(bookMapper).toDto(book);
+    }
+
+    @Test
+    @DisplayName("Get book by id - exception(not found)")
+    void getBookById_ShouldThrowException_WhenNotFound() {
+        Long bookId = 99L;
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        RuntimeException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> {
+                    bookService.getBookById(bookId);
+                });
+
+        assertEquals("Failed to find book by ID: " + bookId, exception.getMessage());
+        verify(bookRepository).findById(bookId);
+    }
+
+    @Test
+    @DisplayName("Update book - exception(not found)")
+    void updateBook_ShouldThrowException_WhenBookNotFound() {
+        Long bookId = 100L;
+        CreateBookRequestDto requestDto = TestUtil.getRequestToUpdateBook();
+        when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
+
+        RuntimeException exception =
+                org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> {
+                    bookService.updateBook(bookId, requestDto);
+                });
+
+        assertEquals("Book not found by ID: " + bookId, exception.getMessage());
+        verify(bookRepository).findById(bookId);
+    }
+
+    @Test
+    @DisplayName("Search books - empty list")
+    void searchBooks_ShouldReturnEmptyList_WhenNoBooksMatch() {
+        BookSearchParametersDto searchDto = new BookSearchParametersDto("NonExistentTitle", null, null);
+        Specification<Book> spec = mock(Specification.class);
+
+        when(bookSpecificationBuilder.build(searchDto)).thenReturn(spec);
+        when(bookRepository.findAll(spec, Pageable.unpaged())).thenReturn(Page.empty());
+
+        Page<BookDto> result = bookService.search(searchDto, Pageable.unpaged());
+
+        assertTrue(result.isEmpty());
+        verify(bookSpecificationBuilder).build(searchDto);
+        verify(bookRepository).findAll(spec, Pageable.unpaged());
     }
 }

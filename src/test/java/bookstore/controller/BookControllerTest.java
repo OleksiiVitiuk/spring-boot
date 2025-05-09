@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Set;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +23,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,24 +49,32 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Test get book by id")
-    void testGetBookById() throws Exception {
+    void getBookById_ValidId_Ok() throws Exception {
         MvcResult result = mockMvc.perform(get("/books/1"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         BookDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookDto.class);
-        assertBook(actual,
-                1L,
-                "BookTitle", "BookAuthor",
-                "123-456-789",
-                BigDecimal.valueOf(20.00),
-                "desc", "path");
+
+        BookDto expected = new BookDto();
+        expected.setId(1L);
+        expected.setTitle("BookTitle");
+        expected.setAuthor("BookAuthor");
+        expected.setIsbn("123-456-789");
+        expected.setPrice(BigDecimal.valueOf(20.00).stripTrailingZeros());
+        expected.setDescription("desc");
+        expected.setCoverImage("path");
+        expected.setCategoryIds(Set.of(1L));
+
+        actual.setPrice(actual.getPrice().stripTrailingZeros());
+
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
     }
 
     @Test
     @DisplayName("Test update book")
-    void updateBook() throws Exception {
+    void updateBook_ValidRequest_Ok() throws Exception {
         String json = objectMapper.writeValueAsString(TestUtil.getRequestToUpdateBook());
 
         MvcResult result = mockMvc.perform(put("/books/1")
@@ -77,19 +86,23 @@ class BookControllerTest {
 
         BookDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookDto.class);
-        assertBook(actual,
-                1L,
-                "Updated Title",
-                "Updated Author",
-                "123-456-789",
-                BigDecimal.valueOf(9.99),
-                "Updated Description",
-                "https://prnt.sc/fuAknzzANREq");
+
+        BookDto expected = new BookDto();
+        expected.setId(1L);
+        expected.setTitle("Updated Title");
+        expected.setAuthor("Updated Author");
+        expected.setIsbn("123-456-789");
+        expected.setPrice(BigDecimal.valueOf(9.99).stripTrailingZeros());
+        expected.setDescription("Updated Description");
+        expected.setCoverImage("https://prnt.sc/fuAknzzANREq");
+        expected.setCategoryIds(Set.of(1L));
+
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
     }
 
     @Test
     @DisplayName("Test search books")
-    void searchBooks() throws Exception {
+    void searchBooks_ValidParams_ReturnsMatchingBooks() throws Exception {
         MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("title", "BookTitle");
         requestParams.add("author", "BookAuthor");
@@ -108,16 +121,26 @@ class BookControllerTest {
                 contentNode.toString(), new TypeReference<>() {});
 
         assertFalse(books.isEmpty());
-        assertBook(books.get(0), 1L,
-                "BookTitle", "BookAuthor",
-                "123-456-789",
-                BigDecimal.valueOf(20.00),
-                "desc", "path");
+
+        BookDto expected = new BookDto();
+        expected.setId(1L);
+        expected.setTitle("BookTitle");
+        expected.setAuthor("BookAuthor");
+        expected.setIsbn("123-456-789");
+        expected.setPrice(BigDecimal.valueOf(20.00).stripTrailingZeros());
+        expected.setDescription("desc");
+        expected.setCoverImage("path");
+        expected.setCategoryIds(Set.of(1L));
+
+        BookDto actual = books.get(0);
+        actual.setPrice(actual.getPrice().stripTrailingZeros());
+
+        assertTrue(EqualsBuilder.reflectionEquals(expected, actual));
     }
 
     @Test
     @DisplayName("Test invalid book ISBN")
-    void validBookTest() throws Exception {
+    void updateBook_InvalidIsbn_BadRequest() throws Exception {
         CreateBookRequestDto invalidBook = TestUtil.getRequestToUpdateBook();
         invalidBook.setIsbn("12345");
         String json = objectMapper.writeValueAsString(invalidBook);
@@ -132,21 +155,22 @@ class BookControllerTest {
         assertTrue(result.getResponse().getContentAsString().contains("Invalid ISBN format"));
     }
 
-    private void assertBook(BookDto actualBook,
-                            Long id,
-                            String title,
-                            String author,
-                            String isbn,
-                            BigDecimal price,
-                            String description,
-                            String coverImage) {
-        assertNotNull(actualBook);
-        assertEquals(id, actualBook.getId());
-        assertEquals(title, actualBook.getTitle());
-        assertEquals(author, actualBook.getAuthor());
-        assertEquals(isbn, actualBook.getIsbn());
-        assertTrue(price.compareTo(actualBook.getPrice()) == 0);
-        assertEquals(description, actualBook.getDescription());
-        assertEquals(coverImage, actualBook.getCoverImage());
+    @Test
+    @DisplayName("Test delete book by id")
+    void deleteBook_ValidId_Ok() throws Exception {
+        mockMvc.perform(delete("/books/1")
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/books/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Test delete book with non-existing id")
+    void deleteBook_InvalidId_NotFound() throws Exception {
+        mockMvc.perform(delete("/books/999")
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
     }
 }

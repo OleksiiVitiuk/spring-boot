@@ -107,4 +107,62 @@ class CategoryServiceImplTest {
         verify(categoryRepository).save(category);
         verify(categoryMapper).toDto(category);
     }
+
+    @Test
+    @DisplayName("Find all categories when there are no categories")
+    void findAll_ShouldReturnEmptyPage() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Category> categories = new PageImpl<>(List.of());
+
+        when(categoryRepository.findAll(pageable)).thenReturn(categories);
+
+        Page<CategoryDto> result = categoryService.findAll(pageable);
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+        assertEquals(0, result.getContent().size());
+
+        verify(categoryRepository).findAll(pageable);
+    }
+
+    @Test
+    @DisplayName("Save category when save operation fails")
+    void saveCategory_ShouldThrowException_WhenSaveFails() {
+        when(categoryMapper.toModel(categoryCreateDto)).thenReturn(category);
+        when(categoryRepository.save(category)).thenThrow(new RuntimeException("Database error"));
+
+        try {
+            categoryService.saveCategory(categoryCreateDto);
+        } catch (RuntimeException e) {
+            assertEquals("Database error", e.getMessage());
+        }
+
+        verify(categoryRepository).save(category);
+    }
+
+    @Test
+    @DisplayName("Update category when category does not exist")
+    void updateCategory_ShouldThrowException_WhenCategoryNotFound() {
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+
+        try {
+            categoryService.update(1L, categoryCreateDto);
+        } catch (RuntimeException e) {
+            assertEquals("Category is not found with id: 1", e.getMessage());
+        }
+
+        verify(categoryRepository).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Save category with invalid data")
+    void saveCategory_ShouldThrowException_WhenDataIsInvalid() {
+        categoryCreateDto.setName(null);
+
+        try {
+            categoryService.saveCategory(categoryCreateDto);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Category name cannot be null", e.getMessage());
+        }
+    }
 }
