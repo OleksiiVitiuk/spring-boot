@@ -1,2 +1,2 @@
-INSERT INTO category (id, name, description)
+INSERT INTO categories (id, name, description)
 VALUES (3, 'Test Category', 'Test description for deletion');

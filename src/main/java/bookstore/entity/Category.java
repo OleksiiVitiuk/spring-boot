@@ -9,12 +9,10 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "category")
-@SQLDelete(sql = "UPDATE category SET is_deleted = true WHERE id = ?")
+@Table(name = "categories")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @Getter

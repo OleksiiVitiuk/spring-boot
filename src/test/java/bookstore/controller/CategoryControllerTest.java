@@ -83,9 +83,13 @@ public class CategoryControllerTest {
 
         CategoryDto actual = objectMapper
                 .readValue(result.getResponse().getContentAsString(), CategoryDto.class);
-        assertNotNull(actual.getId());
-        assertEquals(categoryDto.getName(), actual.getName());
-        assertEquals(categoryDto.getDescription(), actual.getDescription());
+
+        CategoryDto expected = new CategoryDto();
+        expected.setId(actual.getId());
+        expected.setName("Science");
+        expected.setDescription("desc");
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -109,20 +113,9 @@ public class CategoryControllerTest {
         assertBookWithoutCategory(actualBookWithoutCategory);
     }
 
-    private void assertBookWithoutCategory(BookDtoWithoutCategoryIds book) {
-        assertNotNull(book);
-        assertEquals(1L, book.getId());
-        assertEquals("BookTitle", book.getTitle());
-        assertEquals("BookAuthor", book.getAuthor());
-        assertEquals("123-456-789", book.getIsbn());
-        assertEquals(BigDecimal.valueOf(20.00), book.getPrice());
-        assertEquals("desc", book.getDescription());
-        assertEquals("path", book.getCoverImage());
-    }
-
     @Test
     @DisplayName("Test not valid category to create")
-    void validCategoryTest() throws Exception {
+    void createCategory_withNullName_returnsBadRequest() throws Exception {
         CategoryCreateDto categoryWithNullField = new CategoryCreateDto();
         categoryWithNullField.setName(null);
         String json = objectMapper.writeValueAsString(categoryWithNullField);
@@ -154,5 +147,16 @@ public class CategoryControllerTest {
         mockMvc.perform(delete("/categories/999")
                         .with(csrf()))
                 .andExpect(status().isNoContent());
+    }
+
+    private void assertBookWithoutCategory(BookDtoWithoutCategoryIds book) {
+        assertNotNull(book);
+        assertEquals(1L, book.getId());
+        assertEquals("BookTitle", book.getTitle());
+        assertEquals("BookAuthor", book.getAuthor());
+        assertEquals("123-456-789", book.getIsbn());
+        assertEquals(BigDecimal.valueOf(20.00), book.getPrice());
+        assertEquals("desc", book.getDescription());
+        assertEquals("path", book.getCoverImage());
     }
 }

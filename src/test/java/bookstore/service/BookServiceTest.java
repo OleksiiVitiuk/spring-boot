@@ -1,6 +1,6 @@
 package bookstore.service;
 
-import bookstore.TestUtil;
+import bookstore.util.TestUtil;
 import bookstore.dto.book.BookDto;
 import bookstore.dto.book.BookSearchParametersDto;
 import bookstore.dto.book.CreateBookRequestDto;
@@ -83,7 +83,6 @@ class BookServiceTest {
     @Test
     @DisplayName("Search books by title")
     void searchBooks_ShouldReturnFilteredBooks() {
-        // Big given
         Book book = TestUtil.getBook();
         BookDto bookDto = new BookDto();
         bookDto.setTitle(book.getTitle());

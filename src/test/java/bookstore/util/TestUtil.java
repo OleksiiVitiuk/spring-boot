@@ -1,4 +1,4 @@
-package bookstore;
+package bookstore.util;
 
 import bookstore.dto.book.CreateBookRequestDto;
 import bookstore.dto.category.CategoryCreateDto;

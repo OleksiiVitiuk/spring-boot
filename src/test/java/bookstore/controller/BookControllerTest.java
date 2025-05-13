@@ -1,6 +1,6 @@
 package bookstore.controller;
 
-import bookstore.TestUtil;
+import bookstore.util.TestUtil;
 import bookstore.dto.book.BookDto;
 import bookstore.dto.book.CreateBookRequestDto;
 import com.fasterxml.jackson.core.type.TypeReference;

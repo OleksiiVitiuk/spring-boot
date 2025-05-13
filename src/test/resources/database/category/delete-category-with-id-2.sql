@@ -1,1 +1,1 @@
-DELETE FROM category WHERE id = 2;
+DELETE FROM categories WHERE id = 2;

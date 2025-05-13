@@ -1,6 +1,6 @@
 package bookstore.repository;
 
-import bookstore.TestUtil;
+import bookstore.util.TestUtil;
 import bookstore.entity.Book;
 import bookstore.repository.book.BookRepository;
 import static org.junit.jupiter.api.Assertions.assertEquals;

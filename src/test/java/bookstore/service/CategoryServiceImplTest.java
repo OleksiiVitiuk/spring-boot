@@ -7,6 +7,7 @@ import bookstore.mapper.CategoryMapper;
 import bookstore.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -131,11 +132,10 @@ class CategoryServiceImplTest {
         when(categoryMapper.toModel(categoryCreateDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenThrow(new RuntimeException("Database error"));
 
-        try {
-            categoryService.saveCategory(categoryCreateDto);
-        } catch (RuntimeException e) {
-            assertEquals("Database error", e.getMessage());
-        }
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> categoryService.saveCategory(categoryCreateDto));
+
+        assertEquals("Database error", exception.getMessage());
 
         verify(categoryRepository).save(category);
     }
