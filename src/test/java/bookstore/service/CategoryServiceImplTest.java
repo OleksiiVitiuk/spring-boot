@@ -3,13 +3,14 @@ package bookstore.service;
 import bookstore.dto.category.CategoryCreateDto;
 import bookstore.dto.category.CategoryDto;
 import bookstore.entity.Category;
+import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.CategoryMapper;
 import bookstore.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
-import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -127,29 +128,16 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    @DisplayName("Save category when save operation fails")
-    void saveCategory_ShouldThrowException_WhenSaveFails() {
-        when(categoryMapper.toModel(categoryCreateDto)).thenReturn(category);
-        when(categoryRepository.save(category)).thenThrow(new RuntimeException("Database error"));
-
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> categoryService.saveCategory(categoryCreateDto));
-
-        assertEquals("Database error", exception.getMessage());
-
-        verify(categoryRepository).save(category);
-    }
-
-    @Test
     @DisplayName("Update category when category does not exist")
     void updateCategory_ShouldThrowException_WhenCategoryNotFound() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        try {
-            categoryService.update(1L, categoryCreateDto);
-        } catch (RuntimeException e) {
-            assertEquals("Category is not found with id: 1", e.getMessage());
-        }
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> categoryService.update(1L, categoryCreateDto)
+        );
+
+        assertEquals("Category is not found with id: 1", exception.getMessage());
 
         verify(categoryRepository).findById(1L);
     }

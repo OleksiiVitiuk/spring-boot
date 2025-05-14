@@ -1,16 +1,18 @@
 package bookstore.service;
 
-import bookstore.util.TestUtil;
 import bookstore.dto.book.BookDto;
 import bookstore.dto.book.BookSearchParametersDto;
 import bookstore.dto.book.CreateBookRequestDto;
 import bookstore.entity.Book;
+import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.BookMapper;
 import bookstore.repository.book.BookRepository;
 import bookstore.repository.book.BookSpecificationBuilder;
+import bookstore.util.TestUtil;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -113,10 +115,10 @@ class BookServiceTest {
         Long bookId = 99L;
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        RuntimeException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> {
-                    bookService.getBookById(bookId);
-                });
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> bookService.getBookById(bookId)
+        );
 
         assertEquals("Failed to find book by ID: " + bookId, exception.getMessage());
         verify(bookRepository).findById(bookId);
@@ -129,10 +131,10 @@ class BookServiceTest {
         CreateBookRequestDto requestDto = TestUtil.getRequestToUpdateBook();
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        RuntimeException exception =
-                org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> {
-                    bookService.updateBook(bookId, requestDto);
-                });
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> bookService.updateBook(bookId, requestDto)
+        );
 
         assertEquals("Book not found by ID: " + bookId, exception.getMessage());
         verify(bookRepository).findById(bookId);
