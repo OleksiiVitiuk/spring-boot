@@ -7,8 +7,8 @@ import bookstore.entity.Category;
 import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.BookMapper;
 import bookstore.mapper.CategoryMapper;
-import bookstore.repository.BookRepository;
 import bookstore.repository.CategoryRepository;
+import bookstore.repository.book.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CategoryServiceImpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
-    private CategoryMapper categoryMapper;
-    private BookRepository bookRepository;
-    private BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public Page<CategoryDto> findAll(Pageable pageable) {
