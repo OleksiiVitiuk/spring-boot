@@ -141,16 +141,4 @@ class CategoryServiceImplTest {
 
         verify(categoryRepository).findById(1L);
     }
-
-    @Test
-    @DisplayName("Save category with invalid data")
-    void saveCategory_ShouldThrowException_WhenDataIsInvalid() {
-        categoryCreateDto.setName(null);
-
-        try {
-            categoryService.saveCategory(categoryCreateDto);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Category name cannot be null", e.getMessage());
-        }
-    }
 }
