@@ -9,12 +9,10 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "categories")
-@SQLDelete(sql = "UPDATE category SET is_deleted = 1 WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 @NoArgsConstructor
 @Getter
@@ -27,7 +25,7 @@ public class Category {
     private String name;
     private String description;
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean isDeleted;
+    private boolean isDeleted = false;
 
     public Category(Long id) {
         this.id = id;
