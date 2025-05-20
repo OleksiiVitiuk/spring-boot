@@ -1,24 +1,53 @@
 # Bookstore
 
-This application provides the following functionality:
+Welcome to Bookstore — a modern, secure, and scalable online book shopping platform. This is more than just a CRUD project — it’s an e-commerce-ready solution tailored for clean architecture, real-world business logic, and extensibility.
 
-📝 User registration and authentication
+✨ Core Functionality
+🛒 User Registration & Authentication
+Secure sign-up/login flows with role-based access control (admin/user) using Spring Security & JWT.
 
-📖 Browsing a list of available books
+📚 Browse & Search Books
+Instantly view available books, filter by category, and search by title or author.
 
-🔍 Searching and sorting books by categories or other parameters
+🧠 Smart Sorting & Filtering
+Sort by price, name, or popularity. Use categories to quickly narrow your choices.
 
-🛒 Adding books to a shopping cart
+🛍️ Add to Cart & Manage Cart Items
+Users can build their cart intuitively and manage quantities in real time.
 
-📦 Placing and managing orders
+📦 Order Placement
+Seamless checkout experience. Place orders with calculated totals and delivery info.
+
+📜 Order History Tracking
+View past orders with statuses like PENDING, COMPLETED, and DELIVERED.
+
+🧑‍💼 Admin Panel Features
+Admins can manage inventory — create, update, or soft-delete books and categories.
+
+💡 Why You’ll Love This Project
+✅ Built with Clean Architecture
+Clearly separated layers: Entity, Repository, Service, Controller.
+
+💾 Database-Safe Design
+Soft delete implemented across all major entities using Hibernate filters.
+
+🔐 Secure by Default
+JWT authentication, role-based access, and user isolation — out of the box.
+
+🧪 Test-Friendly
+Designed with testability in mind — use TDD or write integration tests easily.
+
+🔍 Swagger UI Enabled
+Explore all API endpoints visually at
+http://localhost:8080/swagger-ui/index.html
 
 **Model diagram:**
-![img.png](img.png)
+![img.png](README_files/img.png)
 
 
 The development of the Bookstore application involved the following technologies:
 
-![img_2.png](img_2.png)
+![img_2.png](README_files/img_2.png)
 
 **Functional**
 
@@ -33,7 +62,7 @@ Admin capabilities:
 2. Soft deletion is enabled, allowing you to restore deleted items if needed.
 
 **Book-market`s endpoints:**
-![img_1.png](img_1.png)
+![img_1.png](README_files/img_1.png)
 
 	Auth (/auth):
             GET: /registration - Register a new user
@@ -67,6 +96,11 @@ Admin capabilities:
             POST: / - Create a new order
             PATCH: /{id} - Update order status (ADMIN only)
 
+**Swagger UI:**
+![img_3.png](README_files/img_3.png)
+
+![swagger_demo.gif](README_files/swagger_demo.gif)
+
 **Running Book-market:**
 
 Docker:
@@ -91,3 +125,4 @@ Running Locally
     * Password
 
 3. Press "run"
+4. After starting the web server, download books.postman_collection.json(in README_files).
